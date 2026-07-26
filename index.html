@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NISHANT PAUDEL · PORTFOLIO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.2/anime.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=JetBrains+Mono:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #0000FF;
+      --white: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--blue);
+      color: var(--white);
+      font-family: 'JetBrains Mono', monospace;
+      overflow-x: hidden;
+    }
+    .font-serif-display { font-family: 'Playfair Display', serif; }
+    .font-mono { font-family: 'JetBrains Mono', monospace; }
+    section { position: relative; }
+
+    /* Dither overlay */
+    .dither-overlay::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .badge {
+      display: inline-block;
+      border: 2px solid var(--white);
+      padding: 0.35rem 1rem;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: var(--white);
+      color: var(--blue);
+      border: 3px solid var(--white);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.12s ease;
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--white);
+    }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 3px solid var(--white);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      transition: all 0.12s ease;
+    }
+    .btn-outline:hover {
+      background: var(--white);
+      color: var(--blue);
+    }
+
+    .terminal-box {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.4);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+    }
+    .terminal-box code {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+    .copy-btn {
+      background: var(--white);
+      color: var(--blue);
+      border: none;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      transition: background 0.12s ease;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { background: #ddd; }
+    .copy-btn.copied { background: #00cc66; color: white; }
+
+    .project-card {
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.25);
+      backdrop-filter: blur(4px);
+      transition: all 0.15s ease;
+      overflow: hidden;
+    }
+    .project-card:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--white);
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0 rgba(255,255,255,0.2);
+    }
+
+    .feature-card {
+      background: var(--white);
+      color: var(--blue);
+      border: 3px solid var(--blue);
+    }
+    .feature-card .tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      padding: 0.25rem 0.75rem;
+      background: var(--blue);
+      color: var(--white);
+      margin-bottom: 0.75rem;
+    }
+
+    .card-hover-white {
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .card-hover-white:hover {
+      transform: translate(-4px, -4px);
+      box-shadow: 8px 8px 0 rgba(0,0,255,0.15);
+    }
+
+    .social-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      border: 2px solid rgba(255,255,255,0.4);
+      transition: all 0.12s ease;
+    }
+    .social-icon:hover {
+      border-color: var(--white);
+      background: rgba(255,255,255,0.1);
+      transform: translate(-2px, -2px);
+    }
+    .social-icon svg { width: 22px; height: 22px; }
+
+    .giant-text {
+      font-size: clamp(4rem, 20vw, 16rem);
+      font-weight: 900;
+      line-height: 0.85;
+      letter-spacing: -0.04em;
+      color: #0000FF;
+      user-select: none;
+      pointer-events: none;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      width: 100%;
+      text-align: center;
+      transition: color 0.15s linear;
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--blue); }
+    ::-webkit-scrollbar-thumb { background: var(--white); }
+
+    @media (max-width: 768px) {
+      .hero-stack { flex-direction: column; }
+      .giant-text { font-size: clamp(3rem, 15vw, 8rem); }
+    }
+
+    /* ============ PREMIUM ANIMATIONS ============ */
+
+    /* Scroll progress bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: white;
+      z-index: 100;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Fade-up reveal on scroll */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger children slide-in */
+    .slide-stagger > * {
+      opacity: 0;
+      transform: translateX(-30px);
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .slide-stagger.visible > *:nth-child(1) { opacity: 1; transform: translateX(0); }
+    .slide-stagger.visible > *:nth-child(2) { opacity: 1; transform: translateX(0); transition-delay: 0.1s; }
+    .slide-stagger.visible > *:nth-child(3) { opacity: 1; transform: translateX(0); transition-delay: 0.2s; }
+    .slide-stagger.visible > *:nth-child(4) { opacity: 1; transform: translateX(0); transition-delay: 0.3s; }
+    .slide-stagger.visible > *:nth-child(5) { opacity: 1; transform: translateX(0); transition-delay: 0.4s; }
+    .slide-stagger.visible > *:nth-child(6) { opacity: 1; transform: translateX(0); transition-delay: 0.5s; }
+
+    /* Scale on scroll for hero image */
+    .hero-photo-wrap {
+      transition: transform 0.1s ease-out;
+      will-change: transform;
+    }
+
+    /* Floating 3D perspective for hero photo */
+    .photo-3d {
+      perspective: 1200px;
+    }
+    .photo-3d-inner {
+      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: transform;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Scroll progress bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="relative z-20 flex items-center justify-between px-6 py-4 md:px-10 border-b border-white/20" style="clip-path: inset(0 0 0 0);">
+    <span class="font-mono text-xs md:text-sm font-bold tracking-widest uppercase">[NISHANT PAUDEL]</span>
+    <nav class="flex items-center gap-6 md:gap-10 text-xs md:text-sm font-mono uppercase tracking-widest">
+      <a href="#projects" class="hover:underline underline-offset-4">Projects</a>
+      <a href="#about" class="hover:underline underline-offset-4">About</a>
+      <a href="#contact" class="hover:underline underline-offset-4">Contact</a>
+    </nav>
+  </header>
+
+  <!-- ============ HERO (STICKY SCROLL) ============ -->
+  <section class="relative h-[200vh] dither-overlay">
+    <div class="sticky top-0 h-screen flex items-center px-6 md:px-10 overflow-hidden">
+      <div class="max-w-7xl mx-auto w-full">
+        <div class="mb-6 flex flex-wrap gap-3" id="hero-badges">
+          <span class="badge">Made in Nepal &bull; Open Source</span>
+          <span class="badge">14 &bull; Developer &bull; AI Researcher</span>
+        </div>
+
+        <div class="flex hero-stack gap-10 items-center">
+          <div class="flex-1 min-w-0" id="hero-text">
+            <h1 class="font-serif-display text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black leading-[0.9] tracking-tight text-white uppercase" id="hero-headline">
+              NISHANT<br />
+              <span class="italic font-normal">PAUDEL</span>
+            </h1>
+
+            <p class="font-mono text-sm md:text-base uppercase tracking-wider mt-6 max-w-2xl text-white/80 leading-relaxed" id="hero-desc">
+              I build software at the intersection of artificial intelligence, systems engineering, and user experience. Founder of YouthAI Studios. Building the future from Kathmandu, Nepal.
+            </p>
+
+            <!-- Social Icons -->
+            <div class="flex gap-3 mt-8" id="hero-social">
+              <a href="https://github.com/nishantXnova/" target="_blank" class="social-icon" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+                  <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48A10.025 10.025 0 0022 12c0-5.523-4.477-10-10-10z"/>
+                </svg>
+              </a>
+              <a href="https://www.instagram.com/nisha.nt548/" target="_blank" class="social-icon" aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+                  <rect x="2" y="2" width="20" height="20" rx="5"/>
+                  <circle cx="12" cy="12" r="5"/>
+                  <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
+                </svg>
+              </a>
+              <a href="https://x.com/NishantPau4630/" target="_blank" class="social-icon" aria-label="X">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+                  <path d="M4 4l6.5 8.5L4 20h2.5l5-5.5L16 20h5l-7-9.5L21 4h-2.5l-4.5 5L9 4H4z"/>
+                </svg>
+              </a>
+              <a href="https://www.linkedin.com/in/nishant-paudel-369732370/" target="_blank" class="social-icon" aria-label="LinkedIn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+                  <rect x="2" y="2" width="20" height="20" rx="3"/>
+                  <path d="M6 10v7M6 6.5v.5M10 10v7h3v-4.5c0-1.5 2-1.5 2 0V17h3v-5.5c0-3-3.5-3-5-1.5l-1 1"/>
+                </svg>
+              </a>
+            </div>
+
+            <!-- Terminal -->
+            <div class="terminal-box mt-8 max-w-xl" id="hero-terminal">
+              <code class="text-white/90 text-xs sm:text-sm">$ git clone https://github.com/nishantXnova/portfolio</code>
+              <button class="copy-btn" onclick="copyTerminal(this)">[Copy]</button>
+            </div>
+          </div>
+
+          <!-- Hero Photo -->
+          <div class="hero-graphic flex-shrink-0 w-full max-w-md lg:max-w-lg photo-3d" id="hero-photo">
+            <div class="photo-3d-inner relative">
+              <img src="https://i.ibb.co/PsrpS85m/Chat-GPT-Image-Jul-26-2026-12-43-49-PM-1.png" alt="Nishant Paudel" class="w-full h-auto block border-2 border-white/80" />
+              <div class="absolute -bottom-2 -right-2 w-full h-full border-2 border-white/20 -z-10"></div>
+              <div class="absolute -top-2 -left-2 w-10 h-10 border-t-2 border-l-2 border-white/40"></div>
+              <div class="absolute -bottom-2 -right-2 w-10 h-10 border-b-2 border-r-2 border-white/40"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section id="projects" class="relative px-6 md:px-10 py-16 md:py-24 border-t border-white/20">
+    <div class="max-w-7xl mx-auto">
+      <div class="mb-10 text-center fade-up">
+        <span class="badge text-xs">Open Source</span>
+        <h2 class="font-serif-display text-4xl md:text-5xl lg:text-6xl font-black uppercase mt-4 tracking-tight">
+          Projects
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 slide-stagger">
+        <!-- RETRANS-X -->
+        <a href="https://github.com/nishantXnova/RETRANS-X" target="_blank" class="project-card p-6 block no-underline text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <polyline points="16 3 21 3 21 8"/>
+                <line x1="4" y1="20" x2="21" y2="3"/>
+                <polyline points="21 16 21 21 16 21"/>
+                <line x1="15" y1="15" x2="21" y2="21"/>
+                <line x1="4" y1="4" x2="9" y2="9"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">RETRANS-X</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">AI Architecture</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            Next-generation AI architecture exploring alternatives to traditional Transformers. Novel attention mechanisms and efficient inference.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Rust</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Python</span>
+          </div>
+        </a>
+
+        <!-- JAX-V4 -->
+        <a href="https://github.com/nishantXnova/JAX-V4" target="_blank" class="project-card p-6 block no-underline text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <rect x="2" y="6" width="20" height="12" rx="2"/>
+                <circle cx="8" cy="12" r="1.5" fill="white"/>
+                <circle cx="16" cy="12" r="1.5" fill="white"/>
+                <line x1="12" y1="6" x2="12" y2="2"/>
+                <line x1="9" y1="2" x2="15" y2="2"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">JAX-V4</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">Virtual Gamepad</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            Virtual gamepad system that turns smartphones into cross-platform controllers. Low-latency input mapping for any device.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">TypeScript</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">React</span>
+          </div>
+        </a>
+
+        <!-- ZELICA -->
+        <a href="https://github.com/nishantXnova/ZELICA" target="_blank" class="project-card p-6 block no-underline text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                <path d="M2 17l10 5 10-5"/>
+                <path d="M2 12l10 5 10-5"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">ZELICA</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">AI Framework</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            Lightweight AI framework for rapid prototyping and deployment of machine learning models with minimal boilerplate.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Python</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">JAX</span>
+          </div>
+        </a>
+
+        <!-- GoNepal-Latest -->
+        <a href="https://github.com/nishantXnova/GoNepal-Latest" target="_blank" class="project-card p-6 block no-underline text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/>
+                <circle cx="12" cy="10" r="3"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">GoNepal</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">Travel &amp; Safety</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            AI-powered travel and safety platform for Nepal. Real-time alerts, route planning, and emergency response coordination.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">JavaScript</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">React</span>
+          </div>
+        </a>
+
+        <!-- Nimbus-Prime -->
+        <a href="https://github.com/nishantXnova/Nimbus-Prime" target="_blank" class="project-card p-6 block no-underline text-white">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <path d="M18 10h-1.26A8 8 0 109 20h9a5 5 0 000-10z"/>
+                <line x1="12" y1="6" x2="12" y2="10"/>
+                <line x1="8" y1="8" x2="10" y2="12"/>
+                <line x1="16" y1="8" x2="14" y2="12"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">Nimbus Prime</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">Cloud Platform</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            Scalable cloud infrastructure platform for deploying and managing distributed applications with auto-scaling and monitoring.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Rust</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Go</span>
+          </div>
+        </a>
+
+        <!-- YouthAI Studios -->
+        <div class="project-card p-6 block no-underline text-white col-span-1 md:col-span-2 lg:col-span-1">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-10 h-10 border-2 border-white/40 flex items-center justify-center flex-shrink-0">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="white" stroke-width="2">
+                <path d="M12 20h9"/>
+                <path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-mono font-bold text-sm uppercase tracking-wider">YouthAI Studios</h3>
+              <p class="font-mono text-[0.6rem] uppercase tracking-wider text-white/50">Founder</p>
+            </div>
+          </div>
+          <p class="font-mono text-[0.65rem] uppercase tracking-wider text-white/70 leading-relaxed">
+            Building globally impactful AI technologies from Nepal. Working toward creating one of the world's most influential AI companies.
+          </p>
+          <div class="flex gap-2 mt-4">
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">AI</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-white/30 uppercase tracking-wider">Nepal</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT (WHITE CARDS) ============ -->
+  <section id="about" class="relative bg-white px-6 md:px-10 py-16 md:py-24">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-12 fade-up">
+        <span class="font-mono text-xs font-bold uppercase tracking-[0.2em] text-blue-600">
+          About
+        </span>
+        <h2 class="font-serif-display text-4xl md:text-5xl lg:text-6xl font-black uppercase mt-3 tracking-tight text-[#0000FF]">
+          The Mission
+        </h2>
+        <div class="w-16 h-1 bg-[#0000FF] mx-auto mt-4"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 slide-stagger">
+        <!-- Card 1 -->
+        <div class="feature-card card-hover-white p-6">
+          <span class="tag">#1 BUILD</span>
+          <h3 class="font-serif-display text-2xl md:text-3xl font-bold uppercase tracking-tight text-[#0000FF]">
+            From Kathmandu
+          </h3>
+          <p class="font-mono text-xs uppercase tracking-wider text-[#0000FF]/70 mt-3 leading-relaxed">
+            I'm a 14-year-old developer and AI researcher based in Kathmandu, Nepal. I believe innovation can come from anywhere — and I'm proving it by building world-class technology from the Himalayas.
+          </p>
+          <div class="mt-4 pt-4 border-t border-[#0000FF]/20">
+            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-[#0000FF]/50">Location: Kathmandu, Nepal</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="feature-card card-hover-white p-6">
+          <span class="tag">#2 CREATE</span>
+          <h3 class="font-serif-display text-2xl md:text-3xl font-bold uppercase tracking-tight text-[#0000FF]">
+            Full Stack Vision
+          </h3>
+          <p class="font-mono text-xs uppercase tracking-wider text-[#0000FF]/70 mt-3 leading-relaxed">
+            I work across the entire stack — from AI architecture research and machine learning experiments to production-ready full-stack applications. JavaScript, Rust, Python, TypeScript, React — I use the right tool for the job.
+          </p>
+          <div class="mt-4 pt-4 border-t border-[#0000FF]/20 flex flex-wrap gap-2">
+            <span class="text-[0.5rem] px-2 py-1 border border-[#0000FF]/30 text-[#0000FF]/70 uppercase tracking-wider">JS</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-[#0000FF]/30 text-[#0000FF]/70 uppercase tracking-wider">Rust</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-[#0000FF]/30 text-[#0000FF]/70 uppercase tracking-wider">Python</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-[#0000FF]/30 text-[#0000FF]/70 uppercase tracking-wider">React</span>
+            <span class="text-[0.5rem] px-2 py-1 border border-[#0000FF]/30 text-[#0000FF]/70 uppercase tracking-wider">TS</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="feature-card card-hover-white p-6">
+          <span class="tag">#3 IMPACT</span>
+          <h3 class="font-serif-display text-2xl md:text-3xl font-bold uppercase tracking-tight text-[#0000FF]">
+            Global Goals
+          </h3>
+          <p class="font-mono text-xs uppercase tracking-wider text-[#0000FF]/70 mt-3 leading-relaxed">
+            My long-term goal is to build one of the world's most influential AI companies from Nepal. Through YouthAI Studios, I'm working to push the boundaries of what small teams can achieve.
+          </p>
+          <div class="mt-4 pt-4 border-t border-[#0000FF]/20">
+            <span class="font-mono text-[0.55rem] uppercase tracking-wider text-[#0000FF]/50">Stream &bull; JamNepal &bull; JAX-V4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer id="contact" class="relative px-6 md:px-10 py-20 md:py-32 overflow-hidden border-t border-white/20">
+    <div class="max-w-6xl mx-auto relative z-10">
+      <!-- Photo -->
+      <div class="flex justify-center mb-10">
+        <img src="https://i.ibb.co/fgRrgQG/Chat-GPT-Image-Jul-26-2026-01-01-26-PM-1.png" alt="Nishant Paudel" class="w-full max-w-lg h-auto block border-2 border-white/80" />
+      </div>
+
+      <p class="font-mono text-sm md:text-base uppercase tracking-[0.3em] text-center text-white/80">
+        [ Developer &bull; AI Researcher &bull; Founder ]
+      </p>
+
+      <p class="font-mono text-xs uppercase tracking-[0.2em] text-center text-white/50 mt-6 max-w-lg mx-auto leading-relaxed">
+        Building the future. From Kathmandu, for the world.
+      </p>
+
+      <!-- Social Footer Row -->
+      <div class="flex justify-center gap-4 mt-10">
+        <a href="https://github.com/nishantXnova/" target="_blank" class="social-icon" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+            <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48A10.025 10.025 0 0022 12c0-5.523-4.477-10-10-10z"/>
+          </svg>
+        </a>
+        <a href="https://www.instagram.com/nisha.nt548/" target="_blank" class="social-icon" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="5"/>
+            <circle cx="17.5" cy="6.5" r="1.2" fill="white"/>
+          </svg>
+        </a>
+        <a href="https://x.com/NishantPau4630/" target="_blank" class="social-icon" aria-label="X">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+            <path d="M4 4l6.5 8.5L4 20h2.5l5-5.5L16 20h5l-7-9.5L21 4h-2.5l-4.5 5L9 4H4z"/>
+          </svg>
+        </a>
+        <a href="https://www.linkedin.com/in/nishant-paudel-369732370/" target="_blank" class="social-icon" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8">
+            <rect x="2" y="2" width="20" height="20" rx="3"/>
+            <path d="M6 10v7M6 6.5v.5M10 10v7h3v-4.5c0-1.5 2-1.5 2 0V17h3v-5.5c0-3-3.5-3-5-1.5l-1 1"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Bottom links -->
+      <div class="flex flex-wrap justify-between items-center mt-16 pt-8 border-t border-white/20 font-mono text-[0.6rem] md:text-xs uppercase tracking-widest text-white/50">
+        <span>[Version v1.0.0]</span>
+        <div class="flex gap-4 md:gap-8 mt-4 md:mt-0">
+          <a href="https://github.com/nishantXnova/" target="_blank" class="hover:text-white transition-colors">GitHub</a>
+          <a href="#projects" class="hover:text-white transition-colors">Projects</a>
+          <a href="#about" class="hover:text-white transition-colors">About</a>
+        </div>
+        <span class="mt-4 md:mt-0">[Made in Nepal &copy; 2026]</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Copy to clipboard
+    function copyTerminal(el) {
+      var code = el.previousElementSibling;
+      if (!code) return;
+      var text = code.textContent.replace(/^\$\s*/, '').trim();
+      if (!text) text = code.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(function () { showCopied(el); }).catch(function () { fallbackCopy(text, el); });
+      } else { fallbackCopy(text, el); }
+    }
+    function fallbackCopy(text, el) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); showCopied(el); } catch (e) {}
+      document.body.removeChild(ta);
+    }
+    function showCopied(el) {
+      var orig = el.textContent;
+      el.textContent = '[Copied!]';
+      el.classList.add('copied');
+      setTimeout(function () { el.textContent = orig; el.classList.remove('copied'); }, 1800);
+    }
+
+    // ============ PREMIUM ANIMATION SYSTEM ============
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // --- 1. SCROLL PROGRESS BAR ---
+      var progressBar = document.getElementById('scroll-progress');
+      if (progressBar) {
+        window.addEventListener('scroll', function () {
+          var scrollTop = window.scrollY;
+          var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+          var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+          progressBar.style.width = progress + '%';
+        }, { passive: true });
+      }
+
+      // --- 2. STICKY SCROLL: photo scales down as text scrolls through hero ---
+      var heroPhoto = document.getElementById('hero-photo');
+      var heroSection = document.querySelector('.h-\\[200vh\\]');
+      if (heroPhoto && heroSection) {
+        window.addEventListener('scroll', function () {
+          var rect = heroSection.getBoundingClientRect();
+          var progress = 1 - Math.max(0, Math.min(1, (-rect.top) / window.innerHeight));
+          // Scale photo from 1 to 0.85 as user scrolls through the sticky section
+          var scale = 0.85 + (progress * 0.15);
+          heroPhoto.style.transform = 'scale(' + scale + ')';
+          heroPhoto.style.opacity = 0.3 + (progress * 0.7);
+        }, { passive: true });
+      }
+
+      // --- 3. 3D PERSPECTIVE TILT ON HERO PHOTO (scroll-based) ---
+      var photoInner = document.querySelector('.photo-3d-inner');
+      if (photoInner) {
+        window.addEventListener('scroll', function () {
+          var rect = photoInner.getBoundingClientRect();
+          var centerY = rect.top + rect.height / 2;
+          var viewCenter = window.innerHeight / 2;
+          var diff = (centerY - viewCenter) / (window.innerHeight / 2);
+          var rotateY = diff * 8;
+          var rotateX = Math.abs(diff) * 3;
+          photoInner.style.transform =
+            'perspective(1200px) rotateY(' + rotateY + 'deg) rotateX(' + (diff * -2) + 'deg)';
+        }, { passive: true });
+      }
+
+      // --- 4. SCROLL REVEAL via IntersectionObserver ---
+      var revealElements = document.querySelectorAll('.fade-up, .slide-stagger');
+      if (revealElements.length) {
+        var revealObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              revealObserver.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        revealElements.forEach(function (el) { revealObserver.observe(el); });
+      }
+
+      // --- 5. HERO ENTRANCE: anime.js timeline with clip-path ---
+      var heroBadges = document.getElementById('hero-badges');
+      var heroHeadline = document.getElementById('hero-headline');
+      var heroDesc = document.getElementById('hero-desc');
+      var heroSocial = document.getElementById('hero-social');
+      var heroTerminal = document.getElementById('hero-terminal');
+      var heroPhotoEl = document.getElementById('hero-photo');
+
+      // Set initial states (badges and text hidden for entrance)
+      if (heroBadges) heroBadges.style.opacity = '0';
+      if (heroHeadline) heroHeadline.style.opacity = '0';
+      if (heroDesc) heroDesc.style.opacity = '0';
+      if (heroSocial) heroSocial.style.opacity = '0';
+      if (heroTerminal) heroTerminal.style.opacity = '0';
+      // Photo starts visible so it doesn't load late
+      if (heroPhotoEl) { heroPhotoEl.style.opacity = '1'; }
+
+      var tl = anime.timeline({
+        easing: 'cubicBezier(0.16, 1, 0.3, 1)',
+        begin: function () {
+          if (heroBadges) heroBadges.style.opacity = '1';
+        }
+      });
+
+      tl
+        .add({
+          targets: '#hero-badges',
+          translateY: [-24, 0],
+          opacity: [0, 1],
+          duration: 700,
+        })
+        .add({
+          targets: '#hero-headline',
+          translateY: [80, 0],
+          opacity: [0, 1],
+          duration: 900,
+        }, '-=400')
+        .add({
+          targets: '#hero-photo',
+          scale: [1.05, 1],
+          opacity: [0.6, 1],
+          duration: 1000,
+        }, '-=800')
+        .add({
+          targets: '#hero-desc',
+          translateY: [40, 0],
+          opacity: [0, 1],
+          duration: 700,
+        }, '-=600')
+        .add({
+          targets: '#hero-social a',
+          translateX: [-30, 0],
+          opacity: [0, 1],
+          duration: 500,
+          delay: anime.stagger(80),
+        }, '-=400')
+        .add({
+          targets: '#hero-terminal',
+          translateY: [40, 0],
+          opacity: [0, 1],
+          duration: 700,
+        }, '-=350');
+
+      // --- 6. FOOTER GIANT TEXT: parallax + color transition (blue → white) ---
+      var footerSection = document.getElementById('contact');
+      if (footerSection) {
+        window.addEventListener('scroll', function () {
+          var footerRect = footerSection.getBoundingClientRect();
+          var vh = window.innerHeight;
+        }, { passive: true });
+      }
+
+    });
+  </script>
+</body>
+</html>
